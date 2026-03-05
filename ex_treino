@@ -1,0 +1,41 @@
+Table users{
+  id_user int [pk]
+  nome varchar
+  data_nascimento varchar(8)
+}
+
+Table telefone{
+  id_telefone_user int [pk]
+  numero_contato varchar(20)
+}
+
+Table enderecos{
+  id_endereço_user int [pk]
+  logradouro varchar
+  numero varchar(6)
+  bairro varchar
+  cidade varchar
+  cep varchar (8)
+}
+
+Table artistas {
+  id_artista int [pk]
+  nome_artista varchar
+}
+
+Table musicas {
+  id_musica int [pk]
+  titulo_musica varchar
+  ano_musica varchar (4)
+}
+
+Table playlists{
+  id_pl int [pk]
+  nome_pl varchar
+}
+
+Ref{users.id_user < telefone.id_telefone_user}
+Ref{enderecos.id_endereço_user > users.id_user}
+Ref{artistas.id_artista < musicas.id_musica}
+Ref{users.id_user < playlists.id_pl}
+Ref{playlists.id_pl < musicas.id_musica}

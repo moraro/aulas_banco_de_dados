@@ -1,0 +1,60 @@
+Table livros{
+  id_livro INT [pk]
+  titulo varchar
+  isbn varchar
+  ano_publicacao int
+  numero_pagina int
+}
+
+Table autores{
+  id_autor INT [pk]
+  nome varchar
+  nacionalidade varchar
+}
+
+
+Table livros_autores{
+  id_livro_autor int [pk]
+  autor_id int
+  livro_id int
+}
+
+ref: autores.id_autor < livros_autores.autor_id
+ref: livros.id_livro < livros_autores.livro_id
+
+
+Table usuarios{
+  id_usuario INT [pk]
+  nome_completo varchar
+  cpf varchar [unique]
+  cep varchar
+  logradouro varchar
+  numero varchar
+  complemento varchar
+  bairro varchar
+  cidade varchar
+  estado varchar
+  matricula int [unique]
+}
+
+Table emprestimos{
+  id_emprestimo INT [pk]
+  usuario_id int
+  data_retirada date
+  data_devolucao date
+  data_real_devolucao date
+  multa float
+}
+
+Table exemplares{
+  id_exemplar INT [pk]
+  tombo int
+  livro_id int
+}
+
+Table itens_emprestimos{
+  id_item_emprestimo int [pk]
+  emprestimo_id int
+  exemplar_id int
+}
+

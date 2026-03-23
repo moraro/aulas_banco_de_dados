@@ -1,0 +1,91 @@
+Table usuarios{
+  id_usuario int [pk] 
+  email_usuario varchar [unique]
+  cpf varchar [unique]
+  data_nascimento varchar
+  nome_exibicao varchar
+}
+
+Table enderecos{
+  id_endereco int [pk]
+  endereco_usuario varchar 
+  id_usuario int 
+}
+
+Ref {usuarios.id_usuario < enderecos.id_usuario}
+
+Table planos{
+  id_plano int [pk]
+  preco_plano float
+  qualidade_audio varchar
+  tela_simultanias varchar
+}
+
+Table plano_usuarios{
+  id_plano_usuario int [pk]
+  id_usuario int
+  id_plano int
+  data_inicio date
+  data_fim date
+  status varchar
+}
+
+Ref {plano_usuarios.id_usuario > usuarios.id_usuario}
+Ref {planos.id_plano > plano_usuarios.id_plano}
+
+Table idiomas {
+  id_idioma int [pk]
+  idioma_legenda varchar
+  idioma_audio varchar
+  id_usuario int
+}
+
+Ref {idiomas.id_usuario > usuarios.id_usuario}
+
+Table conteudos{
+  id_conteudo int [pk]
+  tipo_conteudo varchar
+  titulo_conteudo varchar
+  duracao_conteudo seconds
+  data_lancamento date
+}
+
+Table generos {
+  id_genero int [pk]
+  genero_conteudo varchar
+  id_conteudo int
+}
+
+Ref {conteudos.id_conteudo > generos.id_conteudo}
+
+Table musicas {
+  id_musica int [pk]
+  nome_musica varchar
+  letra_musica text
+}
+
+Table albuns {
+  id_album int [pk]
+  nome_album varchar
+  data_lancamento date
+  img_capa varchar
+  id_artista int
+  id_musica int
+}
+
+Table artistas{
+  id_artista int [pk]
+  nome_artistico varchar
+  pais_origem varchar
+  biografia text
+}
+
+Table nome_artistas{
+  id_nome_artista int [pk]
+  nome_artista varchar
+  id_artista int
+}
+
+Ref {musicas.id_musica - albuns.id_musica}
+Ref {artistas.id_artista - albuns.id_artista}
+Ref {artistas.id_artista < nome_artistas.id_artista}

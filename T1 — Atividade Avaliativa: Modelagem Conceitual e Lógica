@@ -20,19 +20,19 @@ Table planos{
   qualidade_audio varchar
   qualidade_video varchar
   tela_simultanias varchar
+  planos_usuarios_id int
 }
 
 Table plano_usuarios{
   id_plano_usuario int [pk]
   usuario_id int
-  plano_id int
   data_inicio date
   data_fim date
   status varchar
 }
 
 Ref {plano_usuarios.usuario_id > usuarios.id_usuario}
-Ref {planos.id_plano > plano_usuarios.plano_id}
+Ref {planos.planos_usuarios_id > plano_usuarios.id_plano_usuario}
 
 Table idiomas {
   id_idioma int [pk]
@@ -49,15 +49,15 @@ Table conteudos{
   titulo_conteudo varchar
   duracao_conteudo seconds
   data_lancamento date
+  genero_id int
 }
 
 Table generos {
   id_genero int [pk]
   genero_conteudo varchar
-  conteudo_id int
 }
 
-Ref {conteudos.id_conteudo > generos.conteudo_id}
+Ref {conteudos.genero_id > generos.id_genero}
 
 Table musicas {
   id_musica int [pk]
@@ -99,6 +99,7 @@ Table filmes{
   sinopse text
   classificacao_et varchar
   conteudo_id int
+  diretor_id int
 }
 
 Ref {conteudos.id_conteudo - filmes.conteudo_id}
@@ -108,7 +109,6 @@ Table diretores{
   nome_diretor varchar
   data_nascimento_diretor date
   nacionalidade_diretor varchar
-  filme_id int
 }
 
 Table atores{
@@ -121,7 +121,7 @@ Table atores{
   filme_id int
 }
 
-Ref {filmes.id_filme > diretores.filme_id}
+Ref {filmes.diretor_id > diretores.id_diretor}
 Ref {filmes.id_filme > atores.filme_id}
 
 Table series{
@@ -151,3 +151,19 @@ Table episodios{
 }
 
 Ref {temporadas.id_temporada < episodios.temporada_id}
+
+Table playlists{
+  id_playlist int [pk]
+  nome_playlist varchar
+  descricao_playlist text
+  visibilidade_playlist varchar
+  data_criacao date
+  ordem_playlist int  
+  seguidores int
+  data_seguidor date
+  usuario_id int
+  conteudo_id int
+}
+
+Ref{usuarios.id_usuario < playlists.usuario_id}
+Ref{conteudos.id_conteudo < playlists.conteudo_id}

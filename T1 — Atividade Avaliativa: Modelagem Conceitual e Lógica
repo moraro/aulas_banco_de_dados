@@ -2,45 +2,46 @@ Table usuarios{
   id_usuario int [pk] 
   email_usuario varchar [unique]
   cpf varchar [unique]
-  data_nascimento varchar
+  data_nascimento date
   nome_exibicao varchar
 }
 
 Table enderecos{
   id_endereco int [pk]
   endereco_usuario varchar 
-  id_usuario int 
+  usuario_id int 
 }
 
-Ref {usuarios.id_usuario < enderecos.id_usuario}
+Ref {usuarios.id_usuario < enderecos.usuario_id}
 
 Table planos{
   id_plano int [pk]
   preco_plano float
   qualidade_audio varchar
+  qualidade_video varchar
   tela_simultanias varchar
 }
 
 Table plano_usuarios{
   id_plano_usuario int [pk]
-  id_usuario int
-  id_plano int
+  usuario_id int
+  plano_id int
   data_inicio date
   data_fim date
   status varchar
 }
 
-Ref {plano_usuarios.id_usuario > usuarios.id_usuario}
-Ref {planos.id_plano > plano_usuarios.id_plano}
+Ref {plano_usuarios.usuario_id > usuarios.id_usuario}
+Ref {planos.id_plano > plano_usuarios.plano_id}
 
 Table idiomas {
   id_idioma int [pk]
   idioma_legenda varchar
   idioma_audio varchar
-  id_usuario int
+  usuario_id int
 }
 
-Ref {idiomas.id_usuario > usuarios.id_usuario}
+Ref {idiomas.usuario_id > usuarios.id_usuario}
 
 Table conteudos{
   id_conteudo int [pk]
@@ -53,24 +54,27 @@ Table conteudos{
 Table generos {
   id_genero int [pk]
   genero_conteudo varchar
-  id_conteudo int
+  conteudo_id int
 }
 
-Ref {conteudos.id_conteudo > generos.id_conteudo}
+Ref {conteudos.id_conteudo > generos.conteudo_id}
 
 Table musicas {
   id_musica int [pk]
   nome_musica varchar
   letra_musica text
+  conteudo_id int
 }
+
+Ref {conteudos.id_conteudo - musicas.conteudo_id}
 
 Table albuns {
   id_album int [pk]
   nome_album varchar
   data_lancamento date
   img_capa varchar
-  id_artista int
-  id_musica int
+  artista_id int
+  musica_id int
 }
 
 Table artistas{
@@ -83,9 +87,67 @@ Table artistas{
 Table nome_artistas{
   id_nome_artista int [pk]
   nome_artista varchar
-  id_artista int
+  artista_id int
 }
 
-Ref {musicas.id_musica - albuns.id_musica}
-Ref {artistas.id_artista - albuns.id_artista}
-Ref {artistas.id_artista < nome_artistas.id_artista}
+Ref {musicas.id_musica - albuns.musica_id}
+Ref {artistas.id_artista - albuns.artista_id}
+Ref {artistas.id_artista < nome_artistas.artista_id}
+
+Table filmes{
+  id_filme int [pk]
+  sinopse text
+  classificacao_et varchar
+  conteudo_id int
+}
+
+Ref {conteudos.id_conteudo - filmes.conteudo_id}
+
+Table diretores{
+  id_diretor int [pk]
+  nome_diretor varchar
+  data_nascimento_diretor date
+  nacionalidade_diretor varchar
+  filme_id int
+}
+
+Table atores{
+  id_ator int [pk]
+  nome_autor varchar
+  data_nascimento_autor date
+  nacionalidade_autor varchar
+  nome_personagem varchar
+  posicao_creditos varchar
+  filme_id int
+}
+
+Ref {filmes.id_filme > diretores.filme_id}
+Ref {filmes.id_filme > atores.filme_id}
+
+Table series{
+  id_series int [pk]
+  titulo_serie varchar
+  sinopse_serie text
+  classificacao_et varchar
+  status_producao varchar
+  conteudo_id int
+}
+
+Table temporadas{
+  id_temporada int [pk]
+  serie_id int
+  numero_ordem_temporada int
+  ano_lancamento_temporada year 
+}
+
+Ref {series.id_series < temporadas.serie_id}
+Ref {conteudos.id_conteudo - series.conteudo_id}
+
+Table episodios{
+  id_episodios int [pk]
+  temporada_id int
+  numero_ordem_episodio int
+  sinopse text 
+}
+
+Ref {temporadas.id_temporada < episodios.temporada_id}

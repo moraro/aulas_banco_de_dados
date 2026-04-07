@@ -1,0 +1,89 @@
+CREATE DATABASE IF NOT EXISTS atividades_estudos_02
+	CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+    
+SHOW DATABASES;
+
+-- DROP DATABASE IF EXISTS atividades_estudos_02;
+
+USE atividades_estudos_02;
+
+
+CREATE TABLE IF NOT EXISTS instrutores (
+	id_instrutor BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    bio VARCHAR(255) NULL,
+    especialidade VARCHAR(255),
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS cursos(
+	id_curso BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    titulo_curso VARCHAR(100) NOT NULL,
+    descricao VARCHAR(255) NOT NULL,
+    preco FLOAT NOT NULL,
+    carga_horaria FLOAT NOT NULL,
+    id_instrutor BIGINT UNSIGNED,
+    id_alunos BIGINT UNSIGNED,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_instrutor FOREIGN KEY (id_instrutor) REFERENCES instrutores(id_instrutor),
+    CONSTRAINT fk_alunos FOREIGN KEY(id_alunos) REFERENCES alunos(id_aluno)
+);
+
+CREATE TABLE IF NOT EXISTS nivel_curso(
+	id_nivel BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nivel_iniciante VARCHAR(100) NOT NULL,
+    nivel_intermediario VARCHAR(100) NOT NULL,
+    nivel_avancado VARCHAR(100) NOT NULL,
+    id_curso BIGINT UNSIGNED,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT fk_curso FOREIGN KEY (id_curso) REFERENCES cursos(id_curso) 
+);
+
+CREATE TABLE IF NOT EXISTS modulos_curso(
+	id_modulo BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    quant_modulos INT NOT NULL,
+    tilulo_modulo VARCHAR(100) NOT NULL,
+    descricao_modulo VARCHAR(100) NOT NULL,
+    id_curso BIGINT UNSIGNED,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_id_curso FOREIGN KEY (id_modulo) REFERENCES cursos(id_curso)
+);
+
+CREATE TABLE IF NOT EXISTS aulas(
+	id_aula BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    titulo_aula VARCHAR(100) NOT NULL,
+    duracao_aula TIME NOT NULL,
+    link_aula VARCHAR(150) NOT NULL,
+    id_modulo BIGINT UNSIGNED,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_modulo FOREIGN KEY (id_modulo) REFERENCES modulos_curso(id_modulo)    
+);
+
+CREATE TABLE IF NOT EXISTS alunos(
+	id_aluno BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    nome_aluno VARCHAR(150) NOT NULL,
+    email_aluno VARCHAR(100) NOT NULL,
+    nascimento_data DATE NOT NULL,
+    id_curso BIGINT UNSIGNED,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_aluno FOREIGN KEY (id_curso) REFERENCES cursos(id_curso)
+);
+
+CREATE TABLE IF NOT EXISTS matriculas(
+	id_matricula BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    matricula_data DATE,
+    preco_matricula FLOAT,
+    id_alunos BIGINT UNSIGNED,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_matricula FOREIGN KEY (id_alunos) REFERENCES alunos(id_aluno)
+);
+
+SHOW TABLES;
